@@ -2648,23 +2648,12 @@ static void __init exynos4_reserve_mem(void)
 	};
 #ifdef CONFIG_EXYNOS_CONTENT_PATH_PROTECTION
 	static struct cma_region regions_secure[] = {
-#if !defined(CONFIG_CMA)
+#ifndef CONFIG_DMA_CMA
 #ifdef CONFIG_ION_EXYNOS_CONTIGHEAP_SIZE
 		{
 			.name	= "ion",
 			.size	= CONFIG_ION_EXYNOS_CONTIGHEAP_SIZE * SZ_1K,
 		},
-#else /*defined(CONFIG_CMA)*/
-#if defined(CONFIG_USE_MFC_CMA)
-#if defined(CONFIG_MACH_M0) || defined(CONFIG_MACH_ZEST) || defined(CONFIG_MACH_WATCH)
-#ifdef CONFIG_ION_EXYNOS_CONTIGHEAP_SIZE
-		{
-			.name = "ion",
-			.size = CONFIG_ION_EXYNOS_CONTIGHEAP_SIZE * SZ_1K,
-#if defined(CONFIG_MACH_ZEST)
-			.start = 0x5B200000,
-#else
-			.start = 0x5F200000,
 #endif
 #ifdef CONFIG_VIDEO_SAMSUNG_MEMSIZE_MFC_SECURE
 		{
@@ -3467,7 +3456,7 @@ static void __init exynos_c2c_reserve(void)
 }
 #endif
 
-#ifdef CONFIG_CMA
+#ifdef CONFIG_DMA_CMA
 static void __init exynos4_reserve(void)
 {
 	int ret = 0;
@@ -3536,7 +3525,7 @@ MACHINE_START(SMDK4412, "SMDK4x12")
 	.timer		= &exynos4_timer,
 #if defined(CONFIG_EXYNOS_C2C)
 	.reserve	= &exynos_c2c_reserve,
-#elif defined(CONFIG_CMA)
+#elif defined(CONFIG_DMA_CMA)
 	.reserve	= &exynos4_reserve,
 #endif
 	.init_early	= &exynos_init_reserve,
@@ -3551,7 +3540,7 @@ MACHINE_START(SMDK4212, "SMDK4x12")
 	.timer		= &exynos4_timer,
 #if defined(CONFIG_EXYNOS_C2C)
 	.reserve	= &exynos_c2c_reserve,
-#elif defined(CONFIG_CMA)
+#elif defined(CONFIG_DMA_CMA)
 	.reserve	= &exynos4_reserve,
 #endif
 	.init_early	= &exynos_init_reserve,
